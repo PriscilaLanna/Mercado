@@ -1,0 +1,61 @@
+<app-navbar></app-navbar>
+<app-page-header [page-title]="pageTitle" button-text="<< Voltar" button-link="/produtos" button-class="btn-light">
+</app-page-header>
+
+
+<form [formGroup]="resourceForm" (submit)="submitForm()">
+
+    <div class="card">
+        <div class="card-header">
+            Informações sobre o Produto
+        </div>
+
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="nome">Nome</label>
+                    <input type="text" class="form-control" id="nome" value="produto.nome" formControlName="nome"
+                        required>
+                    <div *ngIf="resourceForm.get('nome').errors?.required" class="text text-danger">nome é obrigatório
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="valor">Valor</label>
+                    <input type="number" class="form-control" id="valor" formControlName="valor"
+                        value="produto.valor | currency:'BRL'">
+                    <div *ngIf="resourceForm.get('valor').errors?.required" class="text text-danger">valor é obrigatório
+                    </div>
+                    <div *ngIf="resourceForm.get('valor').errors?.min" class="text text-danger">valor é obrigatório
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="imagem">Imagem</label>
+                    <div *ngIf="inputFile; then thenBlock; else elseBlock"></div>
+                    <ng-template #thenBlock>
+                        <input type="file"  (change)="setFiles($event)" class="form-control" id="imagem"
+                            formControlName="imagem" accept=".jpg, .jpeg">
+                        <!-- <div *ngIf="resourceForm.get('imagem').errors?.required" class="text text-danger">
+                            imagem é obrigatório
+                        </div>
+                        <div *ngIf="resourceForm.get('imagem').errors?.min" class="text text-danger">
+                            imagem é obrigatório
+                        </div> -->
+                    </ng-template>
+                    <ng-template #elseBlock>
+                        <button type="button" class="btn btn-light form-control" (click)="inputFile = true;"> Alterar imagem
+                        </button>
+                    </ng-template>
+                </div>
+                <div class="form-group col-md-4" *ngIf="imagem">
+                    <img width="150" height="150" *ngIf="imagem" src="{{imagem}}" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-error-message [server-error-messages]="serverErrorMessages"></app-error-message>
+
+    <button [disabled]="submittingForm || resourceForm.invalid" type="submit" class="btn btn-primary btn-lg float-right mt-3"> Salvar
+    </button>

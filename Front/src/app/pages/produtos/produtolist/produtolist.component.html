@@ -1,0 +1,56 @@
+<app-navbar></app-navbar>
+<div class="row mb-4">
+  <div class="col-md-9">
+    <h1 class="h2 border-left pl-2">
+      Produtos
+    </h1>
+  </div>
+  <div class="col-md-3 text-right">
+    <a [routerLink]="['new']" class="btn btn-primary">
+      + Novo Produto
+    </a>
+  </div>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr class="bg-primary text-light">
+      <th colspan="2">Produto</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let produto of produtos | paginate: {
+      itemsPerPage: limit,
+      currentPage: page,
+      totalItems: totalItems
+    }">
+      <td>
+        <strong>{{produto.nome}}</strong><br>
+        <small>{{produto.valor | currency:'BRL'}}</small>
+      </td>
+      <td>
+        <div *ngIf="!produto.imagem; then thenBlock; else elseBlock"></div>
+        <ng-template #thenBlock> <img src="/../../../../assets/images/semproduto.jpg" with="100" height="100" />
+        </ng-template>
+        <ng-template #elseBlock><img src="{{produto.imagem}}" with="100" height="100" /> </ng-template>
+      </td>
+      <td>
+        <a [routerLink]="[produto.id, 'edit']" class="btn btn-outline-info btn-sm mr-2">Editar</a>
+        <button (click)="delete(produto)" class="btn btn-outline-danger btn-sm">Excluir</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="produtos.length < 1" class="text-danger">
+  Nenhum item encontrado
+</div>
+
+<div class="container">
+  <div class="col-md-12">
+    <div class="align-items-center">
+    <pagination-controls   responsive="true" (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+  </div>
+</div>
